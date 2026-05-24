@@ -1,0 +1,5 @@
+BirdCode/bin/Debug/
+BirdCode/bin/Release/*
+obj/
+.vs/
+
