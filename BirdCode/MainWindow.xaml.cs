@@ -24,12 +24,15 @@ namespace BirdCode
         List<string[]> birds;
         List<int> found;
         int current;
+        bool firstDataContextChanged = false;
 
         new Dictionary<string, int> code4, code6, codesp;
 
         public MainWindow()
         {
             InitializeComponent();
+            var app = System.Reflection.Assembly.GetEntryAssembly().GetName();
+            Title = String.Format("{0} v{1}.{2}.{3}", app.Name, app.Version.Major, app.Version.Minor, app.Version.Build);
             birds = new List<string[]>();
             code4 = new Dictionary<string, int>();
             code6 = new Dictionary<string, int>();
@@ -147,6 +150,32 @@ namespace BirdCode
             cbOrdFam.SelectedIndex = -1;
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var tbName = (sender as TextBox).Name;
+            if (!firstDataContextChanged) return;
+            firstDataContextChanged = false;
+            if (tbName!=tbCommonName.Name) tbCommonName.Text = "";
+            if (tbName != tb4Code.Name) tb4Code.Text = "";
+            if (tbName != tb6Code.Name) tb6Code.Text = "";
+            if (tbName != tbSpCode.Name) tbSpCode.Text = "";
+            if (tbName != tbCnName.Name) tbCnName.Text = "";
+            if (tbName != tbSciName.Name) tbSciName.Text = "";
+            cbOrdFam.SelectedIndex = -1;
+        }
+
+        private void cbOrdFam_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!firstDataContextChanged) return;
+            firstDataContextChanged = false;
+            tbCommonName.Text = "";
+            tb4Code.Text = "";
+            tb6Code.Text = "";
+            tbSpCode.Text = "";
+            tbCnName.Text = "";
+            tbSciName.Text = "";
+        }
+
         private void Button_Find_Click(object sender, RoutedEventArgs e)
         {
             string[] bird = null;
@@ -199,6 +228,8 @@ namespace BirdCode
             }
 
             Display(bird);
+            firstDataContextChanged = true;
+
         }
 
         private void Display(string[] bird)
